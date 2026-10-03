@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';import { AppProvider, useApp } from './appState';
-import i18n, { normalizeLang, setLanguage, LANG_STORAGE_KEY } from './i18n';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { AppProvider, useApp } from './appState';
+import { normalizeLang, setLanguage, LANG_STORAGE_KEY } from './i18n';
 import { getM3Theme } from './theme/m3';
 import {
   loadSeedColor,
