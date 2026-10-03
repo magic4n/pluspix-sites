@@ -1,0 +1,63 @@
+{
+  "app": {
+    "name": "PlusPix",
+    "tagline": "Локальный конструктор сайтов"
+  },
+  "topbar": {
+    "save": "Сохранить",
+    "preview": "Просмотр",
+    "export": "Экспорт",
+    "settings": "Настройки",
+    "language": "Язык",
+    "themeMode": "Тема оформления",
+    "modeAuto": "Как в системе",
+    "modeLight": "Светлая",
+    "modeDark": "Тёмная",
+    "seedColor": "Опорный цвет",
+    "saved": "Проект сохранён"
+  },
+  "home": {
+    "title": "Ваши проекты",
+    "newProject": "Новый проект",
+    "newProjectDialog": "Создать новый проект",
+    "projectName": "Название проекта",
+    "projectNamePlaceholder": "Мой сайт",
+    "create": "Создать",
+    "cancel": "Отмена",
+    "rename": "Переименовать",
+    "duplicate": "Дублировать",
+    "delete": "Удалить",
+    "lastEdited": "Изменён {{time}}",
+    "emptyTitle": "Проектов пока нет",
+    "emptyText": "Создайте первый сайт — всё останется на вашем устройстве.",
+    "deleteConfirmTitle": "Удалить проект?",
+    "deleteConfirmText": "«{{name}}» и все его страницы будут безвозвратно удалены из этого браузера. Это действие необратимо.",
+    "open": "Открыть"
+  },
+  "editor": {
+    "pageTitle": "Страницы",
+    "pageSettings": "Настройки страницы",
+    "siteTheme": "Тема сайта",
+    "addPage": "Добавить страницу",
+    "noPageSelected": "Выберите или создайте страницу, чтобы начать редактирование."
+  },
+  "pageTree": {
+    "addPage": "Добавить страницу",
+    "addSubpage": "Добавить подстраницу",
+    "rename": "Переименовать",
+    "delete": "Удалить",
+    "slug": "Адрес (slug)",
+    "metaDescription": "Описание (meta)",
+    "untitled": "Без названия"
+  },
+  "export": {
+    "inProgress": "Экспорт…",
+    "done": "Экспорт завершён",
+    "failed": "Ошибка экспорта"
+  },
+  "common": {
+    "close": "Закрыть",
+    "confirm": "Подтвердить",
+    "ok": "ОК"
+  }
+}

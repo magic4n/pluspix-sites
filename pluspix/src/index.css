@@ -1,0 +1,172 @@
+/* Global chrome styles for the PlusPix builder UI (M1).
+   M3 component styling lives in src/theme/m3.ts; this file covers layout
+   of the custom top bar and screen placeholders. */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--ppx-topbar-bg, rgba(103, 80, 164, 0.06));
+  border-bottom: 1px solid var(--ppx-topbar-border, rgba(0, 0, 0, 0.08));
+}
+
+.mui-theme-dark .topbar {
+  --ppx-topbar-bg: rgba(208, 188, 255, 0.06);
+  --ppx-topbar-border: rgba(255, 255, 255, 0.1);
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  font-size: 26px;
+}
+
+.app-name {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.2px;
+}
+
+.app-tagline {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.icon-btn,
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 9999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.icon-btn:hover,
+.lang-toggle:hover {
+  background: rgba(128, 128, 128, 0.15);
+}
+
+.icon-btn:focus-visible,
+.lang-toggle:focus-visible,
+.seed-swatch:focus-visible,
+.cta-button:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+}
+
+.seed-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid rgba(128, 128, 128, 0.4);
+  cursor: pointer;
+  padding: 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+}
+
+.home-empty {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 48px 16px;
+}
+
+.empty-illustration {
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.cta-button {
+  margin-top: 12px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 9999px;
+  background: #6750a4;
+  color: #fffbfe;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cta-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.editor-placeholder {
+  margin: auto;
+  padding: 48px;
+  opacity: 0.7;
+}
+
+/* Theme picker preview strip */
+.m3-preview-strip {
+  display: flex;
+  gap: 6px;
+}
+
+.m3-preview-strip .tone {
+  height: 28px;
+  flex: 1;
+  border-radius: 8px;
+}
+
+.tone-primary {
+  background: var(--preview-seed, #6750a4);
+}
+
+.tone-container {
+  background: color-mix(in srgb, var(--preview-seed, #6750a4) 25%, white 75%);
+}
+
+.tone-surface {
+  background: color-mix(in srgb, var(--preview-seed, #6750a4) 6%, white 94%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.hex-input {
+  width: 96px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.5);
+  background: transparent;
+  color: inherit;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}

@@ -1,0 +1,63 @@
+{
+  "app": {
+    "name": "PlusPix",
+    "tagline": "Local-first website builder"
+  },
+  "topbar": {
+    "save": "Save",
+    "preview": "Preview",
+    "export": "Export",
+    "settings": "Settings",
+    "language": "Language",
+    "themeMode": "Theme mode",
+    "modeAuto": "Follow system",
+    "modeLight": "Light",
+    "modeDark": "Dark",
+    "seedColor": "Seed color",
+    "saved": "Project saved"
+  },
+  "home": {
+    "title": "Your projects",
+    "newProject": "New project",
+    "newProjectDialog": "Create a new project",
+    "projectName": "Project name",
+    "projectNamePlaceholder": "My awesome site",
+    "create": "Create",
+    "cancel": "Cancel",
+    "rename": "Rename",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "lastEdited": "Last edited {{time}}",
+    "emptyTitle": "No projects yet",
+    "emptyText": "Create your first website — everything stays on your device.",
+    "deleteConfirmTitle": "Delete project?",
+    "deleteConfirmText": "\"{{name}}\" and all its pages will be permanently removed from this browser. This cannot be undone.",
+    "open": "Open"
+  },
+  "editor": {
+    "pageTitle": "Pages",
+    "pageSettings": "Page settings",
+    "siteTheme": "Site theme",
+    "addPage": "Add page",
+    "noPageSelected": "Select or create a page to start editing."
+  },
+  "pageTree": {
+    "addPage": "Add page",
+    "addSubpage": "Add subpage",
+    "rename": "Rename",
+    "delete": "Delete",
+    "slug": "Slug",
+    "metaDescription": "Meta description",
+    "untitled": "Untitled page"
+  },
+  "export": {
+    "inProgress": "Exporting…",
+    "done": "Export finished",
+    "failed": "Export failed"
+  },
+  "common": {
+    "close": "Close",
+    "confirm": "Confirm",
+    "ok": "OK"
+  }
+}
