@@ -1,18 +1,20 @@
 import React from 'react';
 import { Box, Container, Paper, Typography, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useProjectStore } from '@/project/store';
 import { TopBar } from './TopBar';
 
-export interface EditorScreenProps {
-  onNavigateHome: () => void;
-}
-
-export const EditorScreen: React.FC<EditorScreenProps> = ({ onNavigateHome }) => {
+export const EditorScreen: React.FC = () => {
   const { t } = useTranslation();
+  const { currentProject, closeProject } = useProjectStore();
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
-      <TopBar screen="editor" projectName="Untitled Project" onNavigateHome={onNavigateHome} />
+      <TopBar
+        screen="editor"
+        projectName={currentProject?.name || 'Untitled Project'}
+        onNavigateHome={closeProject}
+      />
 
       <Container
         maxWidth="lg"
@@ -60,7 +62,7 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({ onNavigateHome }) =>
           </Box>
 
           <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600 }}>
-            {t('editor.placeholder.title')}
+            {t('editor.placeholder.title')} — {currentProject?.name}
           </Typography>
 
           <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
@@ -69,7 +71,7 @@ export const EditorScreen: React.FC<EditorScreenProps> = ({ onNavigateHome }) =>
 
           <Button
             variant="outlined"
-            onClick={onNavigateHome}
+            onClick={closeProject}
             startIcon={<span className="material-symbols-outlined">arrow_back</span>}
           >
             {t('editor.placeholder.back')}

@@ -2,6 +2,12 @@
   "app": {
     "title": "PlusPix"
   },
+  "common": {
+    "cancel": "Cancel",
+    "create": "Create",
+    "save": "Save",
+    "delete": "Delete"
+  },
   "topbar": {
     "save": "Save",
     "preview": "Preview",
@@ -17,10 +23,27 @@
   },
   "home": {
     "newProject": "New project",
+    "newProjectTile": "New project",
+    "newProjectSubtitle": "Create from scratch",
     "empty": {
       "title": "No projects yet",
       "cta": "Create project",
       "subtitle": "Start creating your website offline with local-first storage."
+    },
+    "dialog": {
+      "createTitle": "Create new project",
+      "nameLabel": "Project name",
+      "namePlaceholder": "e.g. My Website",
+      "deleteTitle": "Delete project",
+      "deleteMessage": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone."
+    },
+    "card": {
+      "doubleClickToRename": "Double-click to rename",
+      "lastEdited": "Edited {{time}}",
+      "menu": "Project options",
+      "rename": "Rename",
+      "duplicate": "Duplicate",
+      "delete": "Delete"
     }
   },
   "editor": {
@@ -29,5 +52,8 @@
       "desc": "Puck canvas and block editor will be initialized here.",
       "back": "Back to Projects"
     }
+  },
+  "export": {
+    "stubNotice": "Site export will be available in milestone M7."
   }
 }

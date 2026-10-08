@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { useSeedStore } from '@/theme/seedStore';
+import { useProjectStore } from '@/project/store';
 import { createM3Theme } from '@/theme/m3';
 import { HomeScreen } from '@/home/HomeScreen';
 import { EditorScreen } from '@/editor/EditorScreen';
 
-export type ScreenType = 'home' | 'editor';
-
 export const App: React.FC = () => {
-  const [screen, setScreen] = useState<ScreenType>('home');
+  const { screen } = useProjectStore();
   const { seedColor, mode } = useSeedStore();
 
   const [systemPrefersDark, setSystemPrefersDark] = useState(() => {
@@ -33,11 +32,7 @@ export const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {screen === 'home' ? (
-        <HomeScreen onCreateProject={() => setScreen('editor')} />
-      ) : (
-        <EditorScreen onNavigateHome={() => setScreen('home')} />
-      )}
+      {screen === 'home' ? <HomeScreen /> : <EditorScreen />}
     </ThemeProvider>
   );
 };
