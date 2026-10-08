@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Puck } from '@measured/puck';
 import '@measured/puck/dist/index.css';
@@ -7,15 +7,27 @@ import { useProjectStore } from '@/project/store';
 import { TopBar } from './TopBar';
 import { PageTree } from './PageTree';
 import { PageSettingsPanel } from './PageSettingsPanel';
+import { SiteThemePanel } from './SiteThemePanel';
 import { config } from './puck/config';
 import { ProjectContextProvider } from './puck/context';
+import { applyTheme, getGoogleFontsHref } from '@/site/applyTheme';
 
 export const EditorScreen: React.FC = () => {
   const { t } = useTranslation();
   const { currentProject, activePageId, updatePuckData, closeProject } = useProjectStore();
   const [pageSettingsOpen, setPageSettingsOpen] = useState(false);
+  const [siteThemeOpen, setSiteThemeOpen] = useState(false);
 
   const activePage = currentProject && activePageId ? currentProject.pages[activePageId] : null;
+
+  // Compute live CSS variables and fonts for the canvas
+  const themeCss = useMemo(() => {
+    return applyTheme(currentProject?.theme, currentProject?.fontPairId);
+  }, [currentProject?.theme, currentProject?.fontPairId]);
+
+  const googleFontsHref = useMemo(() => {
+    return getGoogleFontsHref(currentProject?.fontPairId);
+  }, [currentProject?.fontPairId]);
 
   return (
     <Box
@@ -27,6 +39,10 @@ export const EditorScreen: React.FC = () => {
         overflow: 'hidden',
       }}
     >
+      {/* Live Google Fonts & CSS variables for site theme */}
+      <link rel="stylesheet" href={googleFontsHref} />
+      <style>{themeCss}</style>
+
       <TopBar
         screen="editor"
         projectName={currentProject?.name || 'Untitled Project'}
@@ -38,7 +54,7 @@ export const EditorScreen: React.FC = () => {
         {/* Left column: PageTree */}
         <PageTree
           onOpenPageSettings={() => setPageSettingsOpen(true)}
-          onOpenSiteTheme={() => alert('Site theme panel will be available in milestone M5.')}
+          onOpenSiteTheme={() => setSiteThemeOpen(true)}
         />
 
         {/* Center/Right column: Puck visual block editor */}
@@ -88,6 +104,12 @@ export const EditorScreen: React.FC = () => {
       <PageSettingsPanel
         open={pageSettingsOpen}
         onClose={() => setPageSettingsOpen(false)}
+      />
+
+      {/* Right Drawer: SiteThemePanel */}
+      <SiteThemePanel
+        open={siteThemeOpen}
+        onClose={() => setSiteThemeOpen(false)}
       />
     </Box>
   );

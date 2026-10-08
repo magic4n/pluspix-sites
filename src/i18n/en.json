@@ -61,6 +61,12 @@
     "promoteChildren": "Promote subpages up",
     "noPages": "No pages yet"
   },
+  "siteTheme": {
+    "title": "Site Theme & Typography",
+    "themesSection": "Color Theme",
+    "fontsSection": "Font Pairing",
+    "previewSample": "The quick brown fox jumps over the lazy dog"
+  },
   "pageSettings": {
     "title": "Page Settings",
     "pageTitle": "Page title",
