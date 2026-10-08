@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Project, Page } from './types';
+import { Project, Page, PuckData } from './types';
 import * as api from '@/db/api';
 import * as treeOps from './pageTree';
 
@@ -26,6 +26,9 @@ export interface ProjectStoreState {
 
   // Page selection
   setActivePageId: (pageId: string | null) => void;
+
+  // Puck data updates
+  updatePuckData: (pageId: string, data: PuckData) => void;
 
   // Page Tree operations
   addPage: (params: { title: string; parentId?: string | null }) => string;
@@ -130,6 +133,32 @@ export const useProjectStore = create<ProjectStoreState>((set, get) => ({
   },
 
   setActivePageId: (activePageId: string | null) => set({ activePageId }),
+
+  updatePuckData: (pageId: string, data: PuckData) => {
+    const current = get().currentProject;
+    if (!current) return;
+
+    const targetPage = current.pages[pageId];
+    if (!targetPage) return;
+
+    const updatedPages: Record<string, Page> = {
+      ...current.pages,
+      [pageId]: {
+        ...targetPage,
+        puckData: data,
+        updatedAt: Date.now(),
+      },
+    };
+
+    const updated: Project = {
+      ...current,
+      pages: updatedPages,
+      updatedAt: Date.now(),
+    };
+
+    set({ currentProject: updated });
+    scheduleAutosave(get, set);
+  },
 
   addPage: (params) => {
     const current = get().currentProject;
