@@ -20,7 +20,7 @@ export const useProjectContext = () => useContext(ProjectContext);
 export const ProjectContextProvider: React.FC<{
   project: Project | null;
   activePageId: string | null;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }> = ({ project, activePageId, children }) => {
   const pages = project?.pages || {};
   const rootPageIds = project?.rootPageIds || [];
