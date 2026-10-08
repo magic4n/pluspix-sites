@@ -28,6 +28,7 @@ export interface ProjectCardProps {
   onRename: (id: string, newName: string) => void;
   onDuplicate: (id: string) => void;
   onDelete: (id: string) => void;
+  onExport?: (project: Project) => void;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -36,6 +37,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   onRename,
   onDuplicate,
   onDelete,
+  onExport,
 }) => {
   const { t, i18n } = useTranslation();
   const [menuAnchor, setMenuAnchor] = useState<{ mouseX: number; mouseY: number } | null>(null);
@@ -243,7 +245,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </CardContent>
       </Card>
 
-      {/* Context Menu (Right Click & Kebab Button) */}
+      {/* Context Menu */}
       <Menu
         open={isMenuOpen}
         onClose={handleCloseMenu}
@@ -279,7 +281,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         <MenuItem
           onClick={() => {
             handleCloseMenu();
-            alert(t('export.stubNotice'));
+            if (onExport) onExport(project);
           }}
         >
           <ListItemIcon>

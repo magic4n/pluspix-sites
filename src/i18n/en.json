@@ -27,6 +27,15 @@
     "thisPage": "Preview this page",
     "wholeSite": "Preview whole site"
   },
+  "export": {
+    "title": "Export Site (ZIP)",
+    "inProgress": "Rendering pages...",
+    "packaging": "Creating ZIP archive...",
+    "complete": "Export complete!",
+    "downloadBtn": "Download ZIP",
+    "desc": "Generates a standalone ZIP archive that works 100% offline by double-clicking index.html.",
+    "stubNotice": "Site export will be available in milestone M7."
+  },
   "home": {
     "newProject": "New project",
     "newProjectTile": "New project",
@@ -89,8 +98,5 @@
       "desc": "Puck canvas and block editor will be initialized here.",
       "back": "Back to Projects"
     }
-  },
-  "export": {
-    "stubNotice": "Site export will be available in milestone M7."
   }
 }

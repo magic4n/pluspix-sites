@@ -21,6 +21,7 @@ import { useProjectStore } from '@/project/store';
 import { TopBar } from '@/editor/TopBar';
 import { ProjectCard } from './ProjectCard';
 import { Project } from '@/project/types';
+import { ExportProgressDialog } from '@/export/ExportProgressDialog';
 
 export const HomeScreen: React.FC = () => {
   const { t } = useTranslation();
@@ -37,6 +38,7 @@ export const HomeScreen: React.FC = () => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [exportingProject, setExportingProject] = useState<Project | null>(null);
 
   const handleOpenCreateDialog = () => {
     setNewProjectName('');
@@ -297,6 +299,7 @@ export const HomeScreen: React.FC = () => {
                   onRename={handleRename}
                   onDuplicate={handleDuplicate}
                   onDelete={handleDelete}
+                  onExport={(p) => setExportingProject(p)}
                 />
               ))}
             </Box>
@@ -348,6 +351,15 @@ export const HomeScreen: React.FC = () => {
           </DialogActions>
         </form>
       </Dialog>
+
+      {/* Export Progress Dialog on Home Screen */}
+      {exportingProject && (
+        <ExportProgressDialog
+          open={Boolean(exportingProject)}
+          project={exportingProject}
+          onClose={() => setExportingProject(null)}
+        />
+      )}
     </Box>
   );
 };
