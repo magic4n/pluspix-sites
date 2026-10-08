@@ -23,6 +23,10 @@
     "seedColor": "Seed color",
     "backToHome": "Projects"
   },
+  "preview": {
+    "thisPage": "Preview this page",
+    "wholeSite": "Preview whole site"
+  },
   "home": {
     "newProject": "New project",
     "newProjectTile": "New project",

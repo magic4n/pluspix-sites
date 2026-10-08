@@ -11,10 +11,15 @@ import {
   ToggleButtonGroup,
   TextField,
   CircularProgress,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSeedStore, ThemeMode } from '@/theme/seedStore';
 import { useProjectStore } from '@/project/store';
+import { openPreviewTab } from '@/preview/previewBuilder';
 
 export interface TopBarProps {
   screen: 'home' | 'editor';
@@ -32,6 +37,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   const { seedColor, mode, setSeedColor, setMode } = useSeedStore();
   const {
     currentProject,
+    activePageId,
     renameProject,
     isSaving,
     hasUnsavedChanges,
@@ -40,6 +46,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   const [isEditingName, setIsEditingName] = useState(false);
   const [editedName, setEditedName] = useState(projectName);
+  const [previewAnchor, setPreviewAnchor] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
     setEditedName(projectName);
@@ -80,6 +87,21 @@ export const TopBar: React.FC<TopBarProps> = ({
       setIsEditingName(false);
       setEditedName(projectName);
     }
+  };
+
+  const handlePreviewThisPage = async () => {
+    setPreviewAnchor(null);
+    if (!currentProject) return;
+    const activePage = activePageId ? currentProject.pages[activePageId] : Object.values(currentProject.pages)[0];
+    if (activePage) {
+      await openPreviewTab(currentProject, activePage);
+    }
+  };
+
+  const handlePreviewWholeSite = async () => {
+    setPreviewAnchor(null);
+    if (!currentProject) return;
+    await openPreviewTab(currentProject, 'all');
   };
 
   const currentLang = i18n.language && i18n.language.startsWith('ru') ? 'ru' : 'en';
@@ -179,14 +201,42 @@ export const TopBar: React.FC<TopBarProps> = ({
                 {isSaving ? t('common.saving') : t('topbar.save')}
               </Button>
 
+              {/* Preview Button with Dropdown Menu */}
               <Button
                 variant="text"
                 size="small"
-                onClick={() => alert('Preview will be available in milestone M6.')}
+                onClick={(e) => setPreviewAnchor(e.currentTarget)}
                 startIcon={<span className="material-symbols-outlined">visibility</span>}
+                endIcon={<span className="material-symbols-outlined" style={{ fontSize: 18 }}>arrow_drop_down</span>}
               >
                 {t('topbar.preview')}
               </Button>
+
+              <Menu
+                anchorEl={previewAnchor}
+                open={Boolean(previewAnchor)}
+                onClose={() => setPreviewAnchor(null)}
+                slotProps={{
+                  paper: { sx: { borderRadius: 3, minWidth: 220, mt: 0.5 } },
+                }}
+              >
+                <MenuItem onClick={handlePreviewThisPage}>
+                  <ListItemIcon>
+                    <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
+                      description
+                    </span>
+                  </ListItemIcon>
+                  <ListItemText>{t('preview.thisPage')}</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={handlePreviewWholeSite}>
+                  <ListItemIcon>
+                    <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
+                      public
+                    </span>
+                  </ListItemIcon>
+                  <ListItemText>{t('preview.wholeSite')}</ListItemText>
+                </MenuItem>
+              </Menu>
 
               <Button
                 variant="outlined"

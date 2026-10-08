@@ -23,6 +23,10 @@
     "seedColor": "Основной цвет",
     "backToHome": "Проекты"
   },
+  "preview": {
+    "thisPage": "Предпросмотр этой страницы",
+    "wholeSite": "Предпросмотр всего сайта"
+  },
   "home": {
     "newProject": "Новый проект",
     "newProjectTile": "Новый проект",
