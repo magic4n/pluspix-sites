@@ -40,6 +40,9 @@
     "newProject": "Новый проект",
     "newProjectTile": "Новый проект",
     "newProjectSubtitle": "Создать с нуля",
+    "importZip": "Импорт ZIP",
+    "importErrorTitle": "Ошибка импорта",
+    "importError": "Не удалось импортировать ZIP-файл. Убедитесь, что это корректный ZIP-архив.",
     "empty": {
       "title": "Пока нет проектов",
       "cta": "Создать проект",

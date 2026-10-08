@@ -40,6 +40,9 @@
     "newProject": "New project",
     "newProjectTile": "New project",
     "newProjectSubtitle": "Create from scratch",
+    "importZip": "Import ZIP",
+    "importErrorTitle": "Import Error",
+    "importError": "Failed to import ZIP file. Please ensure it is a valid ZIP archive.",
     "empty": {
       "title": "No projects yet",
       "cta": "Create project",

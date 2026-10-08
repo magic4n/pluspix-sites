@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogContentText,
   DialogActions,
   TextField,
   CircularProgress,
@@ -22,6 +23,7 @@ import { TopBar } from '@/editor/TopBar';
 import { ProjectCard } from './ProjectCard';
 import { Project } from '@/project/types';
 import { ExportProgressDialog } from '@/export/ExportProgressDialog';
+import { importZip } from '@/export/importZip';
 
 export const HomeScreen: React.FC = () => {
   const { t } = useTranslation();
@@ -39,6 +41,10 @@ export const HomeScreen: React.FC = () => {
   const [newProjectName, setNewProjectName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [exportingProject, setExportingProject] = useState<Project | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
+
+  const importFileInputRef = useRef<HTMLInputElement>(null);
 
   const handleOpenCreateDialog = () => {
     setNewProjectName('');
@@ -54,6 +60,30 @@ export const HomeScreen: React.FC = () => {
       setCreateDialogOpen(false);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleImportFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    setImportError(null);
+    try {
+      const res = await importZip(file);
+      if (res.success && res.project) {
+        openProject(res.project);
+      } else {
+        setImportError(res.error || t('home.importError'));
+      }
+    } catch (err: any) {
+      setImportError(err?.message || t('home.importError'));
+    } finally {
+      setIsImporting(false);
+      // Reset input value so same file can be selected again
+      if (importFileInputRef.current) {
+        importFileInputRef.current.value = '';
+      }
     }
   };
 
@@ -73,12 +103,21 @@ export const HomeScreen: React.FC = () => {
     openProject(project);
   };
 
-  const isLoading = projects === undefined;
+  const isLoading = projects === undefined || isImporting;
   const hasProjects = Array.isArray(projects) && projects.length > 0;
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
       <TopBar screen="home" />
+
+      {/* Hidden file input for ZIP import */}
+      <input
+        type="file"
+        ref={importFileInputRef}
+        accept=".zip,application/zip"
+        style={{ display: 'none' }}
+        onChange={handleImportFileChange}
+      />
 
       <Container
         maxWidth="lg"
@@ -196,15 +235,26 @@ export const HomeScreen: React.FC = () => {
                 {t('home.empty.subtitle')}
               </Typography>
 
-              <Button
-                variant="contained"
-                size="large"
-                onClick={handleOpenCreateDialog}
-                startIcon={<span className="material-symbols-outlined">add</span>}
-                sx={{ px: 4, py: 1.5, fontSize: '1rem', borderRadius: 7 }}
-              >
-                {t('home.empty.cta')}
-              </Button>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleOpenCreateDialog}
+                  startIcon={<span className="material-symbols-outlined">add</span>}
+                  sx={{ px: 4, py: 1.5, fontSize: '1rem', borderRadius: 7 }}
+                >
+                  {t('home.empty.cta')}
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  onClick={() => importFileInputRef.current?.click()}
+                  startIcon={<span className="material-symbols-outlined">upload_file</span>}
+                  sx={{ px: 3, py: 1.5, fontSize: '1rem', borderRadius: 7 }}
+                >
+                  {t('home.importZip')}
+                </Button>
+              </Box>
             </Paper>
           </Box>
         ) : (
@@ -214,13 +264,22 @@ export const HomeScreen: React.FC = () => {
               <Typography variant="h5" sx={{ fontWeight: 700 }}>
                 {t('topbar.backToHome')}
               </Typography>
-              <Button
-                variant="contained"
-                onClick={handleOpenCreateDialog}
-                startIcon={<span className="material-symbols-outlined">add</span>}
-              >
-                {t('home.newProject')}
-              </Button>
+              <Box sx={{ display: 'flex', gap: 1.5 }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => importFileInputRef.current?.click()}
+                  startIcon={<span className="material-symbols-outlined">upload_file</span>}
+                >
+                  {t('home.importZip')}
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleOpenCreateDialog}
+                  startIcon={<span className="material-symbols-outlined">add</span>}
+                >
+                  {t('home.newProject')}
+                </Button>
+              </Box>
             </Box>
 
             <Box
@@ -352,7 +411,7 @@ export const HomeScreen: React.FC = () => {
         </form>
       </Dialog>
 
-      {/* Export Progress Dialog on Home Screen */}
+      {/* Export Progress Dialog */}
       {exportingProject && (
         <ExportProgressDialog
           open={Boolean(exportingProject)}
@@ -360,6 +419,29 @@ export const HomeScreen: React.FC = () => {
           onClose={() => setExportingProject(null)}
         />
       )}
+
+      {/* Import Error Dialog */}
+      <Dialog
+        open={Boolean(importError)}
+        onClose={() => setImportError(null)}
+        slotProps={{
+          paper: { sx: { borderRadius: 4, p: 1 } },
+        }}
+      >
+        <DialogTitle sx={{ fontWeight: 600, color: 'error.main' }}>
+          {t('home.importErrorTitle')}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {importError}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button onClick={() => setImportError(null)} variant="contained">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
