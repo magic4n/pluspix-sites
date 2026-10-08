@@ -1,4 +1,5 @@
-import { Config } from '@measured/puck';
+import { Config, Fields } from '@measured/puck';
+import type { TFunction } from 'i18next';
 
 // Layout Blocks
 import Section, { fields as sectionFields, defaultProps as sectionDefaults, SectionProps } from './blocks/Section';
@@ -70,148 +71,222 @@ export interface BlockPropsMap {
 
 export type RootProps = Record<string, never>;
 
-export const config: Config<BlockPropsMap, RootProps> = {
-  categories: {
-    Layout: {
-      components: ['Section', 'Columns', 'Divider', 'Spacer'],
-    },
-    Content: {
-      components: ['Hero', 'Heading', 'RichText', 'Quote', 'Card', 'FAQ'],
-    },
-    Media: {
-      components: ['Image', 'Gallery', 'VideoEmbed', 'MapEmbed', 'CodeBlock'],
-    },
-    Navigation: {
-      components: ['Navbar', 'Footer', 'LinksList', 'Button'],
-    },
-    Data: {
-      components: ['Stats', 'FeatureGrid', 'Testimonial', 'ContactInfo'],
-    },
-  },
-  components: {
-    // Layout
-    Section: {
-      render: Section,
-      fields: sectionFields,
-      defaultProps: sectionDefaults,
-    },
-    Columns: {
-      render: Columns,
-      fields: columnsFields,
-      defaultProps: columnsDefaults,
-    },
-    Divider: {
-      render: Divider,
-      fields: dividerFields,
-      defaultProps: dividerDefaults,
-    },
-    Spacer: {
-      render: Spacer,
-      fields: spacerFields,
-      defaultProps: spacerDefaults,
-    },
+function localizeFields(fields: Fields<any>, t?: TFunction | any): Fields<any> {
+  if (!t) return fields;
+  const result: any = {};
+  for (const [key, field] of Object.entries(fields)) {
+    if (!field) continue;
+    const fallback = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+    const label = t(`puck.fields.${key}`, fallback);
 
-    // Content
-    Hero: {
-      render: Hero,
-      fields: heroFields,
-      defaultProps: heroDefaults,
-    },
-    Heading: {
-      render: Heading,
-      fields: headingFields,
-      defaultProps: headingDefaults,
-    },
-    RichText: {
-      render: RichText,
-      fields: richTextFields,
-      defaultProps: richTextDefaults,
-    },
-    Quote: {
-      render: Quote,
-      fields: quoteFields,
-      defaultProps: quoteDefaults,
-    },
-    Card: {
-      render: Card,
-      fields: cardFields,
-      defaultProps: cardDefaults,
-    },
-    FAQ: {
-      render: FAQ,
-      fields: faqFields,
-      defaultProps: faqDefaults,
-    },
+    if (field.type === 'select' || field.type === 'radio') {
+      const options = field.options?.map((opt: any) => {
+        const optVal = String(opt.value);
+        const optLabel = t(`puck.options.${optVal}`, opt.label || optVal);
+        return {
+          ...opt,
+          label: optLabel,
+        };
+      });
+      result[key] = {
+        ...field,
+        label,
+        options,
+      };
+    } else if (field.type === 'array' && (field as any).arrayFields) {
+      result[key] = {
+        ...field,
+        label,
+        arrayFields: localizeFields((field as any).arrayFields, t),
+      };
+    } else if (field.type === 'object' && (field as any).objectFields) {
+      result[key] = {
+        ...field,
+        label,
+        objectFields: localizeFields((field as any).objectFields, t),
+      };
+    } else {
+      result[key] = {
+        ...field,
+        label,
+      };
+    }
+  }
+  return result;
+}
 
-    // Media
-    Image: {
-      render: ImageBlock,
-      fields: imageFields,
-      defaultProps: imageDefaults,
-    },
-    Gallery: {
-      render: Gallery,
-      fields: galleryFields,
-      defaultProps: galleryDefaults,
-    },
-    VideoEmbed: {
-      render: VideoEmbed,
-      fields: videoEmbedFields,
-      defaultProps: videoEmbedDefaults,
-    },
-    MapEmbed: {
-      render: MapEmbed,
-      fields: mapEmbedFields,
-      defaultProps: mapEmbedDefaults,
-    },
-    CodeBlock: {
-      render: CodeBlock,
-      fields: codeBlockFields,
-      defaultProps: codeBlockDefaults,
-    },
+export function getPuckConfig(t?: TFunction | any): Config<BlockPropsMap, RootProps> {
+  const getLabel = (blockName: string) => (t ? t(`puck.blocks.${blockName}`, blockName) : blockName);
 
-    // Navigation
-    Navbar: {
-      render: Navbar,
-      fields: navbarFields,
-      defaultProps: navbarDefaults,
+  return {
+    categories: {
+      [t ? t('puck.categories.layout', 'Layout') : 'Layout']: {
+        components: ['Section', 'Columns', 'Divider', 'Spacer'],
+      },
+      [t ? t('puck.categories.content', 'Content') : 'Content']: {
+        components: ['Hero', 'Heading', 'RichText', 'Quote', 'Card', 'FAQ'],
+      },
+      [t ? t('puck.categories.media', 'Media') : 'Media']: {
+        components: ['Image', 'Gallery', 'VideoEmbed', 'MapEmbed', 'CodeBlock'],
+      },
+      [t ? t('puck.categories.navigation', 'Navigation') : 'Navigation']: {
+        components: ['Navbar', 'Footer', 'LinksList', 'Button'],
+      },
+      [t ? t('puck.categories.data', 'Data') : 'Data']: {
+        components: ['Stats', 'FeatureGrid', 'Testimonial', 'ContactInfo'],
+      },
     },
-    Footer: {
-      render: Footer,
-      fields: footerFields,
-      defaultProps: footerDefaults,
-    },
-    LinksList: {
-      render: LinksList,
-      fields: linksListFields,
-      defaultProps: linksListDefaults,
-    },
-    Button: {
-      render: ButtonBlock,
-      fields: buttonFields,
-      defaultProps: buttonDefaults,
-    },
+    components: {
+      // Layout
+      Section: {
+        label: getLabel('Section'),
+        render: Section,
+        fields: localizeFields(sectionFields, t),
+        defaultProps: sectionDefaults,
+      },
+      Columns: {
+        label: getLabel('Columns'),
+        render: Columns,
+        fields: localizeFields(columnsFields, t),
+        defaultProps: columnsDefaults,
+      },
+      Divider: {
+        label: getLabel('Divider'),
+        render: Divider,
+        fields: localizeFields(dividerFields, t),
+        defaultProps: dividerDefaults,
+      },
+      Spacer: {
+        label: getLabel('Spacer'),
+        render: Spacer,
+        fields: localizeFields(spacerFields, t),
+        defaultProps: spacerDefaults,
+      },
 
-    // Data
-    Stats: {
-      render: Stats,
-      fields: statsFields,
-      defaultProps: statsDefaults,
+      // Content
+      Hero: {
+        label: getLabel('Hero'),
+        render: Hero,
+        fields: localizeFields(heroFields, t),
+        defaultProps: heroDefaults,
+      },
+      Heading: {
+        label: getLabel('Heading'),
+        render: Heading,
+        fields: localizeFields(headingFields, t),
+        defaultProps: headingDefaults,
+      },
+      RichText: {
+        label: getLabel('RichText'),
+        render: RichText,
+        fields: localizeFields(richTextFields, t),
+        defaultProps: richTextDefaults,
+      },
+      Quote: {
+        label: getLabel('Quote'),
+        render: Quote,
+        fields: localizeFields(quoteFields, t),
+        defaultProps: quoteDefaults,
+      },
+      Card: {
+        label: getLabel('Card'),
+        render: Card,
+        fields: localizeFields(cardFields, t),
+        defaultProps: cardDefaults,
+      },
+      FAQ: {
+        label: getLabel('FAQ'),
+        render: FAQ,
+        fields: localizeFields(faqFields, t),
+        defaultProps: faqDefaults,
+      },
+
+      // Media
+      Image: {
+        label: getLabel('Image'),
+        render: ImageBlock,
+        fields: localizeFields(imageFields, t),
+        defaultProps: imageDefaults,
+      },
+      Gallery: {
+        label: getLabel('Gallery'),
+        render: Gallery,
+        fields: localizeFields(galleryFields, t),
+        defaultProps: galleryDefaults,
+      },
+      VideoEmbed: {
+        label: getLabel('VideoEmbed'),
+        render: VideoEmbed,
+        fields: localizeFields(videoEmbedFields, t),
+        defaultProps: videoEmbedDefaults,
+      },
+      MapEmbed: {
+        label: getLabel('MapEmbed'),
+        render: MapEmbed,
+        fields: localizeFields(mapEmbedFields, t),
+        defaultProps: mapEmbedDefaults,
+      },
+      CodeBlock: {
+        label: getLabel('CodeBlock'),
+        render: CodeBlock,
+        fields: localizeFields(codeBlockFields, t),
+        defaultProps: codeBlockDefaults,
+      },
+
+      // Navigation
+      Navbar: {
+        label: getLabel('Navbar'),
+        render: Navbar,
+        fields: localizeFields(navbarFields, t),
+        defaultProps: navbarDefaults,
+      },
+      Footer: {
+        label: getLabel('Footer'),
+        render: Footer,
+        fields: localizeFields(footerFields, t),
+        defaultProps: footerDefaults,
+      },
+      LinksList: {
+        label: getLabel('LinksList'),
+        render: LinksList,
+        fields: localizeFields(linksListFields, t),
+        defaultProps: linksListDefaults,
+      },
+      Button: {
+        label: getLabel('Button'),
+        render: ButtonBlock,
+        fields: localizeFields(buttonFields, t),
+        defaultProps: buttonDefaults,
+      },
+
+      // Data
+      Stats: {
+        label: getLabel('Stats'),
+        render: Stats,
+        fields: localizeFields(statsFields, t),
+        defaultProps: statsDefaults,
+      },
+      FeatureGrid: {
+        label: getLabel('FeatureGrid'),
+        render: FeatureGrid,
+        fields: localizeFields(featureGridFields, t),
+        defaultProps: featureGridDefaults,
+      },
+      Testimonial: {
+        label: getLabel('Testimonial'),
+        render: Testimonial,
+        fields: localizeFields(testimonialFields, t),
+        defaultProps: testimonialDefaults,
+      },
+      ContactInfo: {
+        label: getLabel('ContactInfo'),
+        render: ContactInfo,
+        fields: localizeFields(contactInfoFields, t),
+        defaultProps: contactInfoDefaults,
+      },
     },
-    FeatureGrid: {
-      render: FeatureGrid,
-      fields: featureGridFields,
-      defaultProps: featureGridDefaults,
-    },
-    Testimonial: {
-      render: Testimonial,
-      fields: testimonialFields,
-      defaultProps: testimonialDefaults,
-    },
-    ContactInfo: {
-      render: ContactInfo,
-      fields: contactInfoFields,
-      defaultProps: contactInfoDefaults,
-    },
-  },
-};
+  };
+}
+
+export const config: Config<BlockPropsMap, RootProps> = getPuckConfig();
+

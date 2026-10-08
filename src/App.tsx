@@ -5,6 +5,7 @@ import { useProjectStore } from '@/project/store';
 import { createM3Theme } from '@/theme/m3';
 import { HomeScreen } from '@/home/HomeScreen';
 import { EditorScreen } from '@/editor/EditorScreen';
+import { LanguageSelectionDialog } from '@/shared/LanguageSelectionDialog';
 
 export const App: React.FC = () => {
   const { screen } = useProjectStore();
@@ -33,6 +34,7 @@ export const App: React.FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {screen === 'home' ? <HomeScreen /> : <EditorScreen />}
+      <LanguageSelectionDialog />
     </ThemeProvider>
   );
 };

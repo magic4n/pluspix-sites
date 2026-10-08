@@ -14,6 +14,8 @@ import {
   DialogActions,
   TextField,
   CircularProgress,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -43,6 +45,7 @@ export const HomeScreen: React.FC = () => {
   const [exportingProject, setExportingProject] = useState<Project | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const [isImporting, setIsImporting] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const importFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -93,6 +96,7 @@ export const HomeScreen: React.FC = () => {
 
   const handleDuplicate = async (id: string) => {
     await duplicateProject(id);
+    setToastMessage(t('notifications.projectDuplicated', 'Project duplicated successfully'));
   };
 
   const handleDelete = async (id: string) => {
@@ -442,6 +446,22 @@ export const HomeScreen: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Toast Notification */}
+      <Snackbar
+        open={Boolean(toastMessage)}
+        autoHideDuration={3000}
+        onClose={() => setToastMessage(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setToastMessage(null)}
+          severity="success"
+          sx={{ width: '100%', borderRadius: 3, boxShadow: 3 }}
+        >
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

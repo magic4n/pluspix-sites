@@ -27,12 +27,14 @@ export interface TopBarProps {
   projectName?: string;
   onNavigateHome?: () => void;
   onOpenPageSettings?: () => void;
+  onOpenShortcuts?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
   screen,
   projectName = 'Untitled Project',
   onNavigateHome,
+  onOpenShortcuts,
 }) => {
   const { t, i18n } = useTranslation();
   const { seedColor, mode, setSeedColor, setMode } = useSeedStore();
@@ -255,7 +257,26 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {/* Theme Seed Color Picker */}
+          {onOpenShortcuts && (
+            <Tooltip title={t('shortcuts.title')}>
+              <IconButton
+                onClick={onOpenShortcuts}
+                size="small"
+                aria-label={t('shortcuts.title')}
+                sx={{
+                  color: 'text.secondary',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  p: 0.7,
+                }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: 20 }}>
+                  keyboard
+                </span>
+              </IconButton>
+            </Tooltip>
+          )}
+
           <Tooltip title={t('topbar.seedColor')}>
             <Box
               sx={{

@@ -9,11 +9,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useProjectStore } from '@/project/store';
 
 export const LinkPicker: CustomField<any> = {
   type: 'custom',
   render: ({ value, onChange }) => {
+    const { t } = useTranslation();
     const { currentProject } = useProjectStore();
     const isInternal = Boolean(value && value.startsWith('page:'));
     const [mode, setMode] = useState<'internal' | 'external'>(isInternal ? 'internal' : 'external');
@@ -55,10 +57,10 @@ export const LinkPicker: CustomField<any> = {
           sx={{ mb: 1 }}
         >
           <ToggleButton value="internal" sx={{ fontSize: '0.75rem', py: 0.4 }}>
-            Page
+            {t('puck.fields.linkInternal', 'Page')}
           </ToggleButton>
           <ToggleButton value="external" sx={{ fontSize: '0.75rem', py: 0.4 }}>
-            URL
+            {t('puck.fields.linkExternal', 'URL')}
           </ToggleButton>
         </ToggleButtonGroup>
 
@@ -79,7 +81,7 @@ export const LinkPicker: CustomField<any> = {
           <TextField
             size="small"
             fullWidth
-            placeholder="https://example.com or #anchor"
+            placeholder={t('puck.fields.linkPlaceholder', 'https://example.com or #anchor')}
             value={value && !isInternal ? value : ''}
             onChange={(e) => handleExternalChange(e.target.value)}
           />

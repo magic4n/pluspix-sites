@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { CustomField } from '@measured/puck';
 import { Box, TextField, Button, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { nanoid } from 'nanoid';
 import { useProjectStore } from '@/project/store';
 import { saveAsset } from '@/db/api';
@@ -8,6 +9,7 @@ import { saveAsset } from '@/db/api';
 export const AssetPicker: CustomField<any> = {
   type: 'custom',
   render: ({ value, onChange }) => {
+    const { t } = useTranslation();
     const { currentProject } = useProjectStore();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,7 +36,7 @@ export const AssetPicker: CustomField<any> = {
         <TextField
           size="small"
           fullWidth
-          placeholder="https://... or upload image"
+          placeholder={t('puck.fields.assetPlaceholder', 'https://... or upload image')}
           value={value || ''}
           onChange={(e) => onChange(e.target.value)}
           sx={{ mb: 1 }}
@@ -56,12 +58,12 @@ export const AssetPicker: CustomField<any> = {
             startIcon={<span className="material-symbols-outlined" style={{ fontSize: 16 }}>upload_file</span>}
             sx={{ fontSize: '0.75rem', py: 0.4 }}
           >
-            Upload
+            {t('puck.fields.upload', 'Upload')}
           </Button>
 
           {value && (
             <Typography variant="caption" color="text.secondary" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              Preview ready
+              {t('puck.fields.previewReady', 'Preview ready')}
             </Typography>
           )}
         </Box>
