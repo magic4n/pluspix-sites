@@ -6,7 +6,9 @@
     "cancel": "Cancel",
     "create": "Create",
     "save": "Save",
-    "delete": "Delete"
+    "delete": "Delete",
+    "saved": "Saved",
+    "saving": "Saving..."
   },
   "topbar": {
     "save": "Save",
@@ -45,6 +47,31 @@
       "duplicate": "Duplicate",
       "delete": "Delete"
     }
+  },
+  "pageTree": {
+    "title": "Pages",
+    "addPage": "Add page",
+    "addRootPage": "Add top-level page",
+    "addChildPage": "Add subpage",
+    "siteTheme": "Site theme",
+    "pageSettings": "Page settings",
+    "deleteConfirmTitle": "Delete page with subpages",
+    "deleteConfirmMessage": "This page contains subpages. What would you like to do?",
+    "deleteSubtree": "Delete page and all subpages",
+    "promoteChildren": "Promote subpages up",
+    "noPages": "No pages yet"
+  },
+  "pageSettings": {
+    "title": "Page Settings",
+    "pageTitle": "Page title",
+    "slug": "URL slug",
+    "slugHelp": "Allowed: lowercase letters, numbers, and hyphens [a-z0-9-].",
+    "slugInvalid": "Invalid slug format. Use [a-z0-9-] without consecutive hyphens.",
+    "pathPreview": "Resulting path in site export",
+    "metaDescription": "Meta description",
+    "metaPlaceholder": "Brief description of page contents for search engines...",
+    "metaHelp": "Appears in <meta name=\"description\"> and search snippets.",
+    "rootNotice": "Root home page is exported directly as index.html at site root."
   },
   "editor": {
     "placeholder": {

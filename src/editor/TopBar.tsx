@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -9,14 +9,18 @@ import {
   Tooltip,
   ToggleButton,
   ToggleButtonGroup,
+  TextField,
+  CircularProgress,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSeedStore, ThemeMode } from '@/theme/seedStore';
+import { useProjectStore } from '@/project/store';
 
 export interface TopBarProps {
   screen: 'home' | 'editor';
   projectName?: string;
   onNavigateHome?: () => void;
+  onOpenPageSettings?: () => void;
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -26,6 +30,20 @@ export const TopBar: React.FC<TopBarProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { seedColor, mode, setSeedColor, setMode } = useSeedStore();
+  const {
+    currentProject,
+    renameProject,
+    isSaving,
+    hasUnsavedChanges,
+    saveNow,
+  } = useProjectStore();
+
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState(projectName);
+
+  useEffect(() => {
+    setEditedName(projectName);
+  }, [projectName]);
 
   const handleLanguageChange = (
     _event: React.MouseEvent<HTMLElement>,
@@ -42,6 +60,25 @@ export const TopBar: React.FC<TopBarProps> = ({
   ) => {
     if (newMode) {
       setMode(newMode);
+    }
+  };
+
+  const handleFinishNameEdit = () => {
+    setIsEditingName(false);
+    const trimmed = editedName.trim();
+    if (trimmed && currentProject && trimmed !== currentProject.name) {
+      renameProject(currentProject.id, trimmed);
+    } else {
+      setEditedName(projectName);
+    }
+  };
+
+  const handleNameKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleFinishNameEdit();
+    } else if (e.key === 'Escape') {
+      setIsEditingName(false);
+      setEditedName(projectName);
     }
   };
 
@@ -85,39 +122,76 @@ export const TopBar: React.FC<TopBarProps> = ({
         {/* Editor Screen Info & Actions */}
         {screen === 'editor' && (
           <>
+            {/* Inline Project Name */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 2 }}>
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontWeight: 500,
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: 1,
-                  bgcolor: 'action.hover',
-                }}
-              >
-                {projectName}
-              </Typography>
+              {isEditingName ? (
+                <TextField
+                  value={editedName}
+                  onChange={(e) => setEditedName(e.target.value)}
+                  onBlur={handleFinishNameEdit}
+                  onKeyDown={handleNameKeyDown}
+                  size="small"
+                  autoFocus
+                  sx={{
+                    '& .MuiInputBase-input': {
+                      fontSize: '0.95rem',
+                      fontWeight: 600,
+                      py: 0.5,
+                      px: 1,
+                    },
+                  }}
+                />
+              ) : (
+                <Typography
+                  variant="subtitle1"
+                  onDoubleClick={() => setIsEditingName(true)}
+                  title={t('home.card.doubleClickToRename')}
+                  sx={{
+                    fontWeight: 600,
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 1,
+                    bgcolor: 'action.hover',
+                    cursor: 'pointer',
+                    '&:hover': { bgcolor: 'action.selected' },
+                  }}
+                >
+                  {projectName}
+                </Typography>
+              )}
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 2 }}>
+            {/* Editor Action Buttons */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
               <Button
-                variant="text"
+                variant={hasUnsavedChanges ? 'contained' : 'text'}
                 size="small"
-                startIcon={<span className="material-symbols-outlined">save</span>}
+                onClick={() => saveNow()}
+                disabled={isSaving}
+                startIcon={
+                  isSaving ? (
+                    <CircularProgress size={16} color="inherit" />
+                  ) : (
+                    <span className="material-symbols-outlined">save</span>
+                  )
+                }
               >
-                {t('topbar.save')}
+                {isSaving ? t('common.saving') : t('topbar.save')}
               </Button>
+
               <Button
                 variant="text"
                 size="small"
+                onClick={() => alert('Preview will be available in milestone M6.')}
                 startIcon={<span className="material-symbols-outlined">visibility</span>}
               >
                 {t('topbar.preview')}
               </Button>
+
               <Button
                 variant="outlined"
                 size="small"
+                onClick={() => alert(t('export.stubNotice'))}
                 startIcon={<span className="material-symbols-outlined">download</span>}
               >
                 {t('topbar.export')}
