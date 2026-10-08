@@ -1,0 +1,33 @@
+{
+  "app": {
+    "title": "PlusPix"
+  },
+  "topbar": {
+    "save": "Save",
+    "preview": "Preview",
+    "export": "Export",
+    "settings": "Settings",
+    "language": "Language",
+    "themeMode": "Theme mode",
+    "modeAuto": "Auto",
+    "modeLight": "Light",
+    "modeDark": "Dark",
+    "seedColor": "Seed color",
+    "backToHome": "Projects"
+  },
+  "home": {
+    "newProject": "New project",
+    "empty": {
+      "title": "No projects yet",
+      "cta": "Create project",
+      "subtitle": "Start creating your website offline with local-first storage."
+    }
+  },
+  "editor": {
+    "placeholder": {
+      "title": "Editor Screen",
+      "desc": "Puck canvas and block editor will be initialized here.",
+      "back": "Back to Projects"
+    }
+  }
+}
